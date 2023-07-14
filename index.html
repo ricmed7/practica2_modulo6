@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+    <! -- RESUELTO POR POR MARISOL INGRID MURIEL ALMANZA Y RICHARD DANNY MEDINA HERBAS -->
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Practica 2</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3"
+        crossorigin="anonymous"></script>
+        <style>
+            .color-box {
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                margin: 7px;
+                display: inline-block;
+            }
+
+            .clic{
+                cursor: pointer;
+            }
+
+            .quantity button{
+                border-radius: 50%;
+                display: inline-block;
+                width: 30px;
+            }
+            .quantity div{
+                text-align: center;
+                min-width: 30px;
+                display: inline-block;
+                font-weight: bold;
+            }
+            .buy-box{
+                margin: 20px;
+            }
+            footer {
+                
+                text-align: center;
+                padding: 30px 10px;
+                margin-top: 50px;
+                min-height: 100px;
+            }
+            .container{
+                margin-top: 50px;
+            }
+            .producto-relacionado-precio{
+                background: orangered;
+                color: white;
+                text-align: center;
+                padding: 10px; 
+            }
+
+            img {
+                max-width: 100%;
+                }
+        </style>
+</head>
+
+<body>
+    <div id="app">
+        <Mymenu></Mymenu>
+       
+        <Myproduct ></Myproduct>
+        <Myfooter></Myfooter>
+    
+    
+    </div>
+
+    
+
+    <script type="module">
+       
+        const { createApp, ref } = Vue
+
+        const miApp = createApp({
+            data() {
+                return {
+                    
+                    
+                }
+            },
+            methods:{
+                
+            }
+        });
+
+
+
+        miApp.component('Mymenu', {
+            data: function () {
+                return {
+                 
+                    ConfiguracionMenu:{
+                    marca:"MegaDron",
+                    menuColor: "lightblue",
+                    menus: [
+                            {
+                            etiqueta: "Inicio",
+                            url: "?"
+                            },
+                            {
+                            etiqueta: "Tienda",
+                            url: "?"
+                            }
+                        ]
+                    }
+                }
+            },
+            template: //html
+            `
+            
+            
+
+                <nav class="navbar navbar-expand-lg " :style="'background-color:'+ ConfiguracionMenu.menuColor">
+                    <div class="container-fluid">
+                        <a class="navbar-brand" href="#">  {{ ConfiguracionMenu.marca}} </a>
+                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                            aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+                        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
+                                
+                                <li v-for="item in ConfiguracionMenu.menus" class="nav-item">
+                                    <a  class="nav-link" :href="item.url">{{item.etiqueta}}</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </nav>
+                
+
+            
+            `
+        });
+
+        miApp.component('Myproduct', {
+            data: function () {
+                return {
+                idproductoselec: "2",
+                ConfiguracionProducto:{
+               
+                precioEstilos: "background: orangered; color: white; font-weight: bold"
+               
+            },
+
+           
+
+            
+
+            pedido:
+                {
+                id:null,
+                cantidad: 0,
+                color:null
+                },
+
+            habilitado: true,
+
+            prodct: {},
+                    
+                }
+            },
+            template: //html
+            `
+            
+            <div class="container">
+
+                <div class="row">
+                    <h3>{{prodct.nombre}}</h3>
+                  
+                  
+                </div>
+
+                <div class="row">
+                    <div class="col-12 col-sm-6 col-md-4 ">
+                        <img :src="prodct.imagen"
+                            alt="" >
+                    </div>
+
+                    <div class="col-12 col-sm-6  col-md-8">
+                        <h6>{{prodct.descripcion}}</h6>
+                        <div class="p-3 mb-2 text-white" :style="ConfiguracionProducto.precioEstilos">
+                            Precio: {{prodct.precio }} BOB
+                        </div>
+                        <h5>Color</h5>
+                        <div>
+                            <div v-for="color in prodct.colores" v-on:click="pedido.color = color;verifica()"  class="color-box clic" :style="'background: '+color"  ></div>
+                        </div>
+                        <h5>Cantidad</h5>
+                        <div class="quantity">
+                            <button v-on:click="pedido.cantidad -=1;verifica()">-</button> 
+                            <div>{{pedido.cantidad}}</div> 
+                            <button v-on:click="pedido.cantidad +=1;verifica()">+</button>
+                        </div>
+                        <div class="buy-box">
+                            <button v-on:click="pedido.id = prodct.id;compro()" type="button" class="btn btn-primary" :disabled="habilitado" >Comprar</button>
+                        </div>
+
+                    </div>
+                </div>
+                
+            </div>
+
+            <Mycatalog  @enviarevento="carganuevoprod($event)"></Mycatalog>
+
+            `
+            ,
+          
+           
+            methods:{
+                
+
+                compro(){
+                    alert("id del producto: "+ this.pedido.id+"\n"+
+                          "cantidad: "+this.pedido.cantidad+"\n"+
+                          "color: "+this.pedido.color);
+                  },
+
+                verifica(){
+                   if (parseInt(this.pedido.cantidad) > 0 && this.pedido.color != null)  
+                        {
+                            this.habilitado = false;
+                        }
+                    else
+                        {
+                            this.habilitado = true;
+                         }
+
+                },
+
+                carganuevoprod(event){
+                //console.log("estamos en cargarnuevoprod");
+                //console.log("idprodnuevo="+event);
+                axios.get('http://localhost:3000/productos/'+event)
+                .then((respuesta) => {
+                    this.prodct=respuesta.data;
+                    console.log(this.prodct);
+                })
+                .catch((error)=>{
+                    console.log(error)
+                })
+               
+               } , 
+               cargaprod(idprod){
+                //console.log("idprod="+idprod);
+                axios.get('http://localhost:3000/productos/'+idprod)
+                .then((respuesta) => {
+                    this.prodct=respuesta.data;
+                    console.log(this.prodct);
+                })
+                .catch((error)=>{
+                    console.log(error)
+                })
+              
+
+               } ,
+               
+
+            },
+            created(){
+                this.cargaprod(this.idproductoselec);
+                },
+           
+        });
+
+        miApp.component('Mycatalog', {
+            data: function () {
+                return {
+                    productosRelacionados: [ ]
+                    
+                }
+            },
+            template: //html
+            ` 
+            
+            <div class="container ">
+
+                <div class="row">
+                    <h4>Productos relacionados</h4>
+                </div>
+                <div class="row">
+                    <div v-for="prods in productosRelacionados " :key="prods.id" class="col">
+                        <div class="card" style="width: 18rem;">
+                            <div class="card-body">
+                                <h5 class="card-title">{{prods.nombre}}</h5>
+                                <img  @click="enviar(prods.id)" :src="prods.imagen "
+                            alt="" >
+                                <p class="card-text">{{prods.descripcion}}</p>
+                                    <div class="producto-relacionado-precio">Precio:{{prods.precio}} BOB</div>
+                                <div>
+                        <div>
+                            <div v-for="colors in prods.colores" class="color-box" :style="'background: '+ colors "></div>
+                            
+                        </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    
+                </div>
+                </div>
+
+            `
+            ,
+            emits:["enviarevento"],
+           methods:{
+            enviar(idseleccionado){
+                //console.log("çlick en imagen"+idseleccionado);
+                this.$emit('enviarevento',idseleccionado);
+                },
+
+            cargaprod(){
+                axios.get('http://localhost:3000/productos')
+                .then((respuesta) => {
+                    this.productosRelacionados=respuesta.data;
+                    //console.log(this.productosRelacionados);
+                })
+                .catch((error)=>{
+                    console.log(error)
+                })
+
+
+                
+               } 
+
+            },
+            created(){
+                this.cargaprod();
+                },
+           
+        });
+
+        miApp.component('Myfooter', {
+            data: function () {
+                return {
+                 
+                    Configuracionfooter:{
+                    
+                    footerColor: "slategrey",
+                    
+                    }
+                }
+            },
+            template: //html
+            `
+            <footer  :style="'background-color:'+ Configuracionfooter.footerColor">
+        
+    </footer>
+            `
+        });
+
+
+
+
+        miApp.mount('#app')
+    </script>
+</body>
+
+</html>
